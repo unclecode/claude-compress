@@ -25,6 +25,16 @@ In any Claude Code session:
 /compress
 ```
 
+### With Focus Guidelines
+
+You can provide focus guidelines to prioritize or ignore specific topics:
+
+```
+/compress focus on API implementation, ignore debugging steps
+/compress keep file paths and commands, remove explanations
+/compress prioritize code changes, skip verbose explanations
+```
+
 This will:
 1. Detect your current chat session
 2. Extract all messages
@@ -54,7 +64,8 @@ python3 ~/.claude/scripts/compress_chat.py --cwd "$(pwd)" \
   --min-length 1000 \  # Only compress lines >= this length (default: 1000)
   --min-output 500 \   # Exclude lines < this from output (default: 500)
   --batch-size 5 \     # API batch size (default: 5)
-  --workers 2          # Concurrent workers (default: 2)
+  --workers 2 \        # Concurrent workers (default: 2)
+  --focus "keep API calls, ignore logs"  # Focus guidelines (optional)
 ```
 
 ## How It Works

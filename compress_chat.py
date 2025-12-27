@@ -261,21 +261,31 @@ def call_claude_api(system: str, user_message: str, api_key: str) -> str:
         raise Exception(f"API Error {e.code}: {error_body}")
 
 
-def compress_message(api_key: str, text: str, target_pct: int = 50) -> str:
+def compress_message(api_key: str, text: str, target_pct: int = 50, focus: str = None) -> str:
     """Compress a single message using Claude API."""
     system = get_system_prompt(target_pct)
     input_len = len(text)
+
+    focus_instruction = ""
+    if focus:
+        focus_instruction = f"""
+USER GUIDELINES (pay special attention to these):
+{focus}
+
+Apply these guidelines when compressing - prioritize content matching the focus areas and be more aggressive removing unrelated content.
+"""
+
     user_msg = f"""Compress this text to ~{target_pct}% of its length ({input_len} chars → ~{int(input_len * target_pct / 100)} chars).
 
 CRITICAL: Your output MUST be shorter than {input_len} chars. Never expand or add content.
-
+{focus_instruction}
 Text to compress:
 {text}"""
     return call_claude_api(system, user_msg, api_key)
 
 
 def compress_batch(api_key: str, lines: list[tuple[int, str]],
-                   max_workers: int = 2, target_pct: int = 50) -> dict[int, str]:
+                   max_workers: int = 2, target_pct: int = 50, focus: str = None) -> dict[int, str]:
     """Compress multiple lines concurrently with retry logic."""
     import time
     results = {}
@@ -284,7 +294,7 @@ def compress_batch(api_key: str, lines: list[tuple[int, str]],
         idx, line = idx_line
         for attempt in range(3):
             try:
-                compressed = compress_message(api_key, line, target_pct)
+                compressed = compress_message(api_key, line, target_pct, focus)
                 return idx, compressed, None
             except Exception as e:
                 if "rate_limit" in str(e).lower() and attempt < 2:
@@ -306,7 +316,8 @@ def compress_batch(api_key: str, lines: list[tuple[int, str]],
 
 def process_messages(messages: list[str], output_path: str, api_key: str,
                      min_length: int = 500, min_output: int = 500,
-                     target_pct: int = 30, batch_size: int = 5, max_workers: int = 2):
+                     target_pct: int = 30, batch_size: int = 5, max_workers: int = 2,
+                     focus: str = None):
     """Process and compress messages."""
     import time
 
@@ -352,7 +363,7 @@ def process_messages(messages: list[str], output_path: str, api_key: str,
 
         print(f"Batch {batch_start//batch_size + 1}: lines {batch_start+1}-{batch_end} of {len(to_compress)}")
 
-        compressed_batch = compress_batch(api_key, batch, max_workers, target_pct)
+        compressed_batch = compress_batch(api_key, batch, max_workers, target_pct, focus)
 
         if batch_end < len(to_compress):
             time.sleep(1)
@@ -407,6 +418,8 @@ def main():
     parser.add_argument('--min-output', type=int, default=500, help='Minimum line length in output (default: 500)')
     parser.add_argument('--batch-size', type=int, default=5, help='Batch size for API calls (default: 5)')
     parser.add_argument('--workers', type=int, default=2, help='Concurrent workers (default: 2)')
+    parser.add_argument('--focus', type=str, default=None,
+                        help='Focus guidelines: topics to prioritize or ignore (e.g., "focus on API changes, ignore styling")')
 
     args = parser.parse_args()
 
@@ -447,6 +460,8 @@ def main():
 
     # Compress
     print(f"\nCompressing to {args.target}%...")
+    if args.focus:
+        print(f"Focus: {args.focus}")
     stats = process_messages(
         messages=messages,
         output_path=output_path,
@@ -455,7 +470,8 @@ def main():
         min_output=args.min_output,
         target_pct=args.target,
         batch_size=args.batch_size,
-        max_workers=args.workers
+        max_workers=args.workers,
+        focus=args.focus
     )
 
     # Report
