@@ -1,4 +1,4 @@
-# Claude Code /compress Command
+# Claude Code /ccomp Command
 
 Compress Claude Code chat sessions to preserve key information while reducing size.
 
@@ -31,20 +31,20 @@ curl -sSL https://raw.githubusercontent.com/unclecode/claude-compress/main/insta
 ### In Claude Code
 
 ```
-/compress
-/compress 50%
-/compress focus on API implementation, ignore debugging steps
-/compress 40% keep file paths and commands, remove explanations
+/ccomp
+/ccomp 50%
+/ccomp focus on API implementation, ignore debugging steps
+/ccomp 40% keep file paths and commands, remove explanations
 ```
 
 ### From Terminal (CLI)
 
 ```bash
-compress                                    # Default 30% compression
-compress --target 50                        # 50% compression
-compress --focus "keep API calls"           # With focus guidelines
-compress --target 40 --focus "ignore logs"  # Combined
-compress --help                             # Show all options
+ccomp                                      # Default 30% compression
+ccomp --target 50                        # 50% compression
+ccomp --focus "keep API calls"           # With focus guidelines
+ccomp --target 40 --focus "ignore logs"  # Combined
+ccomp --help                             # Show all options
 ```
 
 This will:
@@ -59,7 +59,7 @@ This will:
 # Copy script
 mkdir -p ~/.claude/scripts
 cp compress_chat.py ~/.claude/scripts/
-chmod +x ~/.claude/scripts/compress_chat.py
+chmod +x ~/.claude/scripts/ccomp_chat.py
 
 # Copy command
 mkdir -p ~/.claude/commands
@@ -71,7 +71,7 @@ cp compress.md ~/.claude/commands/
 Run the script directly with custom options:
 
 ```bash
-python3 ~/.claude/scripts/compress_chat.py --cwd "$(pwd)" \
+python3 ~/.claude/scripts/ccomp_chat.py --cwd "$(pwd)" \
   --target 30 \        # Target compression % (default: 30)
   --min-length 1000 \  # Only compress lines >= this length (default: 1000)
   --min-output 500 \   # Exclude lines < this from output (default: 500)

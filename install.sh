@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install Claude Code /compress command and CLI
+# Install Claude Code /ccomp command and CLI
 # Usage: curl -sSL https://raw.githubusercontent.com/unclecode/claude-compress/main/install.sh | bash
 
 set -e
@@ -10,7 +10,7 @@ SCRIPTS_DIR="$CLAUDE_DIR/scripts"
 COMMANDS_DIR="$CLAUDE_DIR/commands"
 BIN_DIR="$CLAUDE_DIR/bin"
 
-echo "Installing Claude Code /compress command and CLI..."
+echo "Installing Claude Code /ccomp command and CLI..."
 
 # Create directories
 mkdir -p "$SCRIPTS_DIR"
@@ -18,16 +18,16 @@ mkdir -p "$COMMANDS_DIR"
 mkdir -p "$BIN_DIR"
 
 # Download files
-echo "Downloading compress_chat.py..."
-curl -sSL "$REPO_URL/compress_chat.py" -o "$SCRIPTS_DIR/compress_chat.py"
-chmod +x "$SCRIPTS_DIR/compress_chat.py"
+echo "Downloading ccomp_chat.py..."
+curl -sSL "$REPO_URL/ccomp_chat.py" -o "$SCRIPTS_DIR/ccomp_chat.py"
+chmod +x "$SCRIPTS_DIR/ccomp_chat.py"
 
-echo "Downloading compress.md..."
-curl -sSL "$REPO_URL/compress.md" -o "$COMMANDS_DIR/compress.md"
+echo "Downloading ccomp.md..."
+curl -sSL "$REPO_URL/ccomp.md" -o "$COMMANDS_DIR/ccomp.md"
 
-echo "Downloading compress CLI..."
-curl -sSL "$REPO_URL/compress" -o "$BIN_DIR/compress"
-chmod +x "$BIN_DIR/compress"
+echo "Downloading ccomp CLI..."
+curl -sSL "$REPO_URL/ccomp" -o "$BIN_DIR/ccomp"
+chmod +x "$BIN_DIR/ccomp"
 
 # Add to PATH if not already there
 add_to_path() {
@@ -74,9 +74,9 @@ echo "Installation complete!"
 echo "============================================"
 echo ""
 echo "Files installed:"
-echo "  $SCRIPTS_DIR/compress_chat.py"
-echo "  $COMMANDS_DIR/compress.md"
-echo "  $BIN_DIR/compress"
+echo "  $SCRIPTS_DIR/ccomp_chat.py"
+echo "  $COMMANDS_DIR/ccomp.md"
+echo "  $BIN_DIR/ccomp"
 echo ""
 echo "Requirements:"
 echo "  - ANTHROPIC_API_KEY environment variable must be set"
@@ -84,16 +84,16 @@ echo ""
 echo "Usage:"
 echo ""
 echo "  In Claude Code:"
-echo "    /compress"
-echo "    /compress 50% focus on API calls"
+echo "    /ccomp"
+echo "    /ccomp 50% focus on API calls"
 echo ""
 echo "  From terminal:"
-echo "    compress"
-echo "    compress --target 50 --focus \"keep API calls\""
-echo "    compress --help"
+echo "    ccomp"
+echo "    ccomp --target 50 --focus \"keep API calls\""
+echo "    ccomp --help"
 echo ""
 if [ "$PATH_ADDED" = true ]; then
     echo "NOTE: Restart your terminal or run 'source ~/.zshrc' (or ~/.bashrc)"
-    echo "      for the 'compress' command to be available."
+    echo "      for the 'ccomp' command to be available."
 fi
 echo ""
