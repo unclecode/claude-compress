@@ -28,19 +28,23 @@ curl -sSL https://raw.githubusercontent.com/unclecode/claude-compress/main/insta
 
 ## Usage
 
-In any Claude Code session:
+### In Claude Code
+
 ```
 /compress
-```
-
-### With Focus Guidelines
-
-You can provide focus guidelines to prioritize or ignore specific topics:
-
-```
+/compress 50%
 /compress focus on API implementation, ignore debugging steps
-/compress keep file paths and commands, remove explanations
-/compress prioritize code changes, skip verbose explanations
+/compress 40% keep file paths and commands, remove explanations
+```
+
+### From Terminal (CLI)
+
+```bash
+compress                                    # Default 30% compression
+compress --target 50                        # 50% compression
+compress --focus "keep API calls"           # With focus guidelines
+compress --target 40 --focus "ignore logs"  # Combined
+compress --help                             # Show all options
 ```
 
 This will:
