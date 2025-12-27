@@ -13,6 +13,14 @@ Or with gh cli:
 gh repo clone unclecode/claude-compress && cd claude-compress && ./install.sh
 ```
 
+## Update
+
+Run the same install command to update to the latest version:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/unclecode/claude-compress/main/install.sh | bash
+```
+
 ## Requirements
 
 - `ANTHROPIC_API_KEY` environment variable set
